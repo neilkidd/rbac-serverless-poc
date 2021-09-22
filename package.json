@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
+    "casbin": "^5.11.5",
+    "casbin-dynamodb-adapter": "^0.3.2",
     "express": "^4.17.1",
     "serverless-http": "^2.7.0"
   }

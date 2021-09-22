@@ -12,6 +12,8 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
     - [Export AWS Credentials (Optional)](#export-aws-credentials-optional)
     - [Deploy](#deploy)
   - [Invocation](#invocation)
+    - [Casbin Endpoint](#casbin-endpoint)
+  - [Template API (to be deleted)](#template-api-to-be-deleted)
     - [Creating a New User](#creating-a-new-user)
     - [Retrieve the User by `userId`](#retrieve-the-user-by-userid)
     - [Error for Unknown User](#error-for-unknown-user)
@@ -48,8 +50,7 @@ npm install
 If not already configured. _Note:_ [The leading space is intentional](https://stackoverflow.com/questions/6475524/do-i-prevent-commands-from-showing-up-in-bash-history)
 
 ```bash
- export AWS_ACCESS_KEY_ID=<your-key-here> && \ 
-export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
+ export AWS_ACCESS_KEY_ID=<your-key-here> && export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
 ```
 
 #### Deploy
@@ -69,10 +70,28 @@ endpoints:
 ...
 ```
 
+#### Casbin Endpoint
+
+The current implementation uses static files from the casbin [examples repository](https://github.com/casbin/casbin/tree/master/examples). The model is `rbac_with_resource_roles`. These can be found in the [casbin-config](casbin-config) directory.
+
+There is currently 1 GET endpoint, `/casbin/:sub/:obj/:act` that returns json. Example call:
+
+```bash
+curl <your-endpoint-here>/casbin/alice/data1/read
+```
+
+Which will respond with:
+
+```json
+{"sub":"alice","obj":"data1","act":"read","result":true}
+```
+
+### Template API (to be deleted)
+
 #### Creating a New User
 
 ```bash
-curl --request POST '<your-endpoint-here>/users' --header 'Content-Type: application/json' --data-raw {"name": "John", "userId": "someUserId"}'
+curl --request POST '<your-endpoint-here>/users' --header 'Content-Type: application/json' --data-raw '{"name": "John", "userId": "someUserId"}'
 ```
 
 Success will result in the following response:
@@ -108,7 +127,19 @@ Which should result in the following response:
 ## References
 
 - [Serverless Framework Node Express API on AWS template](https://github.com/serverless/examples/tree/master/aws-node-express-dynamodb-api)
+- [casbin-dynamodb-adapter](https://github.com/fospitia/casbin-dynamodb-adapter)
+- [node-casbin](https://github.com/casbin/node-casbin)
+- [casbin example models & policies](https://github.com/casbin/casbin/tree/master/examples)
 
 ## Up Next / TODO
 
+- Move [casbin model](casbin-config/rbac_with_resource_roles_model.conf) into DynamoDB (Models shouldn't be in a public repo!)
 - Convert the api to use Casbin with dynamodb. See [here](https://www.nearform.com/blog/access-control-node-js-fastify-and-casbin/) for ideas.
+- Define a clean api
+  - Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
+  - Maybe add Swagger / openAPI
+- Remove the template API
+- Define a more realistic scenario of groups and users.
+  - Load test
+- React management front page
+  - Use the mutating sections of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)

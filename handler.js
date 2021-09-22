@@ -2,12 +2,33 @@ const AWS = require("aws-sdk");
 const express = require("express");
 const serverless = require("serverless-http");
 
+const Casbin = require( 'casbin' );
 const app = express();
 
 const USERS_TABLE = process.env.USERS_TABLE;
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
 app.use(express.json());
+
+app.get("/casbin/:sub/:obj/:act", async function (req, res) {
+
+  try {
+    const sub = req.params.sub;
+    const obj = req.params.obj;
+    const act = req.params.act;
+
+    const enforcer = await Casbin.newEnforcer('casbin-config/rbac_with_resource_roles_model.conf', 'casbin-config/rbac_with_resource_roles_policy.csv');
+		// Check permissions.
+		const result = await enforcer.enforce(sub, obj, act );
+		console.log( result );
+
+    res.json({ sub, obj, act, result });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Could not retrieve permission" });
+  }
+});
 
 app.get("/users/:userId", async function (req, res) {
   const params = {
@@ -63,6 +84,5 @@ app.use((req, res, next) => {
     error: "Not Found",
   });
 });
-
 
 module.exports.handler = serverless(app);
