@@ -21,3 +21,71 @@ You will need an AWS account with access key credentials. In practice I simply e
 
 - [Node.js](https://nodejs.org/en/), `14.17.6` (LTS)
 - [Servlerless framework](https://www.serverless.com/), `2.59.0`
+
+### Deployment
+
+1. Install dependencies with:
+
+    ```bash
+    npm install
+    ```
+
+1. (Optional- if not already configured) Export AWS credentials:
+
+    ```bash
+      export AWS_ACCESS_KEY_ID=<your-key-here> && \
+     export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
+    ```
+
+1. Deploy with:
+
+    ```bash
+    serverless deploy
+    ```
+
+### Invocation
+
+After successful deployment, the output will contain an endpoint. Take note of this and replace `<your-endpoint-here>` in subsequent commands.
+
+```bash
+...
+endpoints:
+  ANY - https://xxxxxx.execute-api.us-east-1.amazonaws.com
+...
+```
+
+1. Creating a new user:
+
+    ```bash
+    curl --request POST '<your-endpoint-here>/users' --header 'Content-Type: application/json' --data-raw '{"name": "John", "userId": "someUserId"}'
+    ```
+
+    Success will result in the following response:
+
+    ```bash
+    {"userId":"someUserId","name":"John"}
+    ```
+
+1. Retrieve the user by `userId` by calling the following endpoint:
+
+    ```bash
+    curl <your-endpoint-here>/users/someUserId
+    ```
+
+    Which should result in the following response:
+
+    ```bash
+    {"userId":"someUserId","name":"John"}
+    ```
+
+1. If you try to retrieve user that does not exist, you should receive the following response:
+
+    ```bash
+    curl <your-endpoint-here>/users/someUnknownUserId
+    ```
+
+    Which should result in the following response:
+
+    ```bash
+    {"error":"Could not find user with provided \"userId\""}
+    ```
