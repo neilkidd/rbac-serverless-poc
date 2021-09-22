@@ -6,7 +6,7 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
 
 - [Goals](#goals)
 - [Getting Started](#getting-started)
-  - [Software](#software)
+  - [Software Used](#software-used)
   - [Deployment](#deployment)
     - [Install Dependencies](#install-dependencies)
     - [Export AWS Credentials (Optional)](#export-aws-credentials-optional)
@@ -15,6 +15,8 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
     - [Creating a New User](#creating-a-new-user)
     - [Retrieve the User by `userId`](#retrieve-the-user-by-userid)
     - [Error for Unknown User](#error-for-unknown-user)
+- [References](#references)
+- [Up Next / TODO](#up-next--todo)
 
 ## Goals
 
@@ -28,7 +30,7 @@ Many applications end up reinventing wheels by building tightly coupled permissi
 
 You will need an AWS account with access keys. In practice I [export them on the command line](#export-aws-credentials-optional) of the current session. Other options are documented on the [serverless website](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/).
 
-### Software
+### Software Used
 
 - [Node.js](https://nodejs.org/en/), `14.17.6` (LTS)
 - [Servlerless framework](https://www.serverless.com/), `2.59.0`
@@ -102,3 +104,11 @@ Which should result in the following response:
  ```json
  {"error":"Could not find user with provided \"userId\""}
  ```
+
+## References
+
+- [Serverless Framework Node Express API on AWS template](https://github.com/serverless/examples/tree/master/aws-node-express-dynamodb-api)
+
+## Up Next / TODO
+
+- Convert the api to use Casbin with dynamodb. See [here](https://www.nearform.com/blog/access-control-node-js-fastify-and-casbin/) for ideas.
