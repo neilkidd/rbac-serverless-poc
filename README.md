@@ -1,6 +1,20 @@
-# Role Based Access Control, Serverless, proof of concept
+# Role Based Access Control, Serverless, proof of concept <!-- omit in toc -->
 
 Role Based Access Control proof of concept / experiment, based on [Casbin](https://casbin.org/), AWS [Lambda](https://aws.amazon.com/lambda/) and [DynamoDB](https://aws.amazon.com/dynamodb/)
+
+## Table of Contents  <!-- omit in toc -->
+
+- [Goals](#goals)
+- [Getting Started](#getting-started)
+  - [Software](#software)
+  - [Deployment](#deployment)
+    - [Install Dependencies](#install-dependencies)
+    - [Export AWS Credentials (Optional)](#export-aws-credentials-optional)
+    - [Deploy](#deploy)
+  - [Invocation](#invocation)
+    - [Creating a New User](#creating-a-new-user)
+    - [Retrieve the User by `userId`](#retrieve-the-user-by-userid)
+    - [Error for Unknown User](#error-for-unknown-user)
 
 ## Goals
 
@@ -12,10 +26,7 @@ Many applications end up reinventing wheels by building tightly coupled permissi
 
 ## Getting Started
 
-You will need an AWS account with access key credentials. In practice I simply export them on the command line of the current session. Other options are documented on the [serverless website](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/).
-
-- ` export AWS_ACCESS_KEY_ID=<your-key-here>`
-- ` export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>`
+You will need an AWS account with access keys. In practice I [export them on the command line](#export-aws-credentials-optional) of the current session. Other options are documented on the [serverless website](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/).
 
 ### Software
 
@@ -24,24 +35,26 @@ You will need an AWS account with access key credentials. In practice I simply e
 
 ### Deployment
 
-1. Install dependencies with:
+#### Install Dependencies
 
-    ```bash
-    npm install
-    ```
+```bash
+npm install
+```
 
-1. (Optional- if not already configured) Export AWS credentials:
+#### Export AWS Credentials (Optional)
 
-    ```bash
-      export AWS_ACCESS_KEY_ID=<your-key-here> && \
-     export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
-    ```
+If not already configured. _Note:_ [The leading space is intentional](https://stackoverflow.com/questions/6475524/do-i-prevent-commands-from-showing-up-in-bash-history)
 
-1. Deploy with:
+```bash
+ export AWS_ACCESS_KEY_ID=<your-key-here> && \ 
+export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
+```
 
-    ```bash
-    serverless deploy
-    ```
+#### Deploy
+
+```bash
+serverless deploy
+```
 
 ### Invocation
 
@@ -54,38 +67,38 @@ endpoints:
 ...
 ```
 
-1. Creating a new user:
+#### Creating a New User
 
-    ```bash
-    curl --request POST '<your-endpoint-here>/users' --header 'Content-Type: application/json' --data-raw '{"name": "John", "userId": "someUserId"}'
-    ```
+```bash
+curl --request POST '<your-endpoint-here>/users' --header 'Content-Type: application/json' --data-raw {"name": "John", "userId": "someUserId"}'
+```
 
-    Success will result in the following response:
+Success will result in the following response:
 
-    ```bash
-    {"userId":"someUserId","name":"John"}
-    ```
+```json
+{"userId":"someUserId","name":"John"}
+```
 
-1. Retrieve the user by `userId` by calling the following endpoint:
+#### Retrieve the User by `userId`
 
-    ```bash
-    curl <your-endpoint-here>/users/someUserId
-    ```
+ ```bash
+ curl <your-endpoint-here>/users/someUserId
+ ```
 
-    Which should result in the following response:
+Which should result in the following response:
 
-    ```bash
-    {"userId":"someUserId","name":"John"}
-    ```
+```json
+{"userId":"someUserId","name":"John"}
+```
 
-1. If you try to retrieve user that does not exist, you should receive the following response:
+#### Error for Unknown User
 
-    ```bash
-    curl <your-endpoint-here>/users/someUnknownUserId
-    ```
+ ```bash
+ curl <your-endpoint-here>/users/someUnknownUserId
+ ```
 
-    Which should result in the following response:
+ Which will result in the following response:
 
-    ```bash
-    {"error":"Could not find user with provided \"userId\""}
-    ```
+ ```json
+ {"error":"Could not find user with provided \"userId\""}
+ ```
