@@ -26,9 +26,7 @@ Many applications end up reinventing wheels by building tightly coupled permissi
 
 ## Getting Started
 
-You will need an AWS account with access keys. In practice I [export them on the command line](#export-aws-credentials-optional)[^1] of the current session. Other options are documented on the [serverless website](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/).
-
-[^1]: I use disposable 4 hour AWS accounts, from ACloudGuru.
+You will need an AWS account with [access keys configured](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/). I have access to short term AWS accounts so can safely [export them on the command line](#export-aws-credentials-optional).
 
 ### Software Used
 
@@ -74,7 +72,7 @@ The implementation is `rbac_with_resource_roles`
 
 The model is defined in a [static file](casbin-config/rbac_with_resource_roles_model.conf).
 
-The policies are loaded via the `/seed` endpoint. See [rbac_with_resource_roles_model.conf](casbin-config/rbac_with_resource_roles_model.conf) for the policies used in the code.
+Policies are currently loaded via the `/seed` endpoint. See [rbac_with_resource_roles_policies.conf](casbin-config/rbac_with_resource_roles_policies.conf) for the definition of the policies used in the code.
 
 | Route                     | HTTP Method | Description                                          |
 | ------------------------- | ----------- | ---------------------------------------------------- |
