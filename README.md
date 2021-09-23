@@ -12,11 +12,7 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
     - [Export AWS Credentials (Optional)](#export-aws-credentials-optional)
     - [Deploy](#deploy)
   - [Invocation](#invocation)
-    - [Casbin Endpoint](#casbin-endpoint)
-  - [Template API (to be deleted)](#template-api-to-be-deleted)
-    - [Creating a New User](#creating-a-new-user)
-    - [Retrieve the User by `userId`](#retrieve-the-user-by-userid)
-    - [Error for Unknown User](#error-for-unknown-user)
+    - [Endpoints](#endpoints)
 - [References](#references)
 - [Up Next / TODO](#up-next--todo)
 
@@ -30,7 +26,9 @@ Many applications end up reinventing wheels by building tightly coupled permissi
 
 ## Getting Started
 
-You will need an AWS account with access keys. In practice I [export them on the command line](#export-aws-credentials-optional) of the current session. Other options are documented on the [serverless website](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/).
+You will need an AWS account with access keys. In practice I [export them on the command line](#export-aws-credentials-optional)[^1] of the current session. Other options are documented on the [serverless website](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/).
+
+[^1]: I use disposable 4 hour AWS accounts, from ACloudGuru.
 
 ### Software Used
 
@@ -70,14 +68,23 @@ endpoints:
 ...
 ```
 
-#### Casbin Endpoint
+#### Endpoints
 
-The current implementation uses static files from the casbin [examples repository](https://github.com/casbin/casbin/tree/master/examples). The model is `rbac_with_resource_roles`. These can be found in the [casbin-config](casbin-config) directory.
+The implementation is `rbac_with_resource_roles`
 
-There is currently 1 GET endpoint, `/casbin/:sub/:obj/:act` that returns json. Example call:
+The model is defined in a [static file](casbin-config/rbac_with_resource_roles_model.conf).
+
+The policies are loaded via the `/seed` endpoint. See [rbac_with_resource_roles_model.conf](casbin-config/rbac_with_resource_roles_model.conf) for the policies used in the code.
+
+| Route                     | HTTP Method | Description                                          |
+| ------------------------- | ----------- | ---------------------------------------------------- |
+| `/seed`                   | GET         | Seeds sample policies into dynamoDB                  |
+| `/enforce/:sub/:obj/:act` | GET         | Tests a subject, object, action against the policies |
+
+Example call:
 
 ```bash
-curl <your-endpoint-here>/casbin/alice/data1/read
+curl <your-endpoint-here>/enforce/alice/data1/read
 ```
 
 Which will respond with:
@@ -85,44 +92,6 @@ Which will respond with:
 ```json
 {"sub":"alice","obj":"data1","act":"read","result":true}
 ```
-
-### Template API (to be deleted)
-
-#### Creating a New User
-
-```bash
-curl --request POST '<your-endpoint-here>/users' --header 'Content-Type: application/json' --data-raw '{"name": "John", "userId": "someUserId"}'
-```
-
-Success will result in the following response:
-
-```json
-{"userId":"someUserId","name":"John"}
-```
-
-#### Retrieve the User by `userId`
-
- ```bash
- curl <your-endpoint-here>/users/someUserId
- ```
-
-Which should result in the following response:
-
-```json
-{"userId":"someUserId","name":"John"}
-```
-
-#### Error for Unknown User
-
- ```bash
- curl <your-endpoint-here>/users/someUnknownUserId
- ```
-
- Which will result in the following response:
-
- ```json
- {"error":"Could not find user with provided \"userId\""}
- ```
 
 ## References
 
@@ -133,13 +102,16 @@ Which should result in the following response:
 
 ## Up Next / TODO
 
-- Move [casbin model](casbin-config/rbac_with_resource_roles_model.conf) into DynamoDB (Models shouldn't be in a public repo!)
-- Convert the api to use Casbin with dynamodb. See [here](https://www.nearform.com/blog/access-control-node-js-fastify-and-casbin/) for ideas.
-- Define a clean api
-  - Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
-  - Maybe add Swagger / openAPI
-- Remove the template API
-- Define a more realistic scenario of groups and users.
-  - Load test
-- React management front page
-  - Use the mutating sections of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
+- [x] Move [casbin model](casbin-config/rbac_with_resource_roles_model.conf) into DynamoDB (Models shouldn't be in a public repo!)
+- [x] Convert the api to use Casbin with dynamodb. See [here](https://www.nearform.com/blog/access-control-node-js-fastify-and-casbin/) for ideas.
+- [ ] Define a clean api
+  - [ ] Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
+  - [ ] Maybe add Swagger / openAPI
+- [x] Remove the template API
+- [ ] Define a more realistic scenario of groups and users.
+  - [ ] Load test
+- [ ] React (Next.js?) management front page
+  - [ ] Use the mutating sections of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
+  - [ ] Consider Next.js for the complete implementation?
+- [ ] Specify DynamoDB `ProvisionedThroughput` as defined in the [Python Driver](https://github.com/abqadeer/python-dycasbin/blob/master/python_dycasbin/adapter.py) 
+- [ ] Configure local dynamodb in docker.

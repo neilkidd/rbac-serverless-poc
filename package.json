@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
+    "aws-sdk": "^2.993.0",
     "casbin": "^5.11.5",
     "casbin-dynamodb-adapter": "^0.3.2",
     "express": "^4.17.1",

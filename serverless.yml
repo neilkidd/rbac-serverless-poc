@@ -2,7 +2,7 @@ service: rbac-serverless-poc
 frameworkVersion: '2'
 
 custom:
-  tableName: 'users-table-${sls:stage}'
+  casbinTableName: 'casbin-table-${sls:stage}'
 
 provider:
   name: aws
@@ -20,9 +20,9 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [ UsersTable, Arn ]
+            - Fn::GetAtt: [ CasbinTable, Arn ]
   environment:
-    USERS_TABLE: ${self:custom.tableName}
+    CASBIN_TABLE: ${self:custom.casbinTableName}
 
 functions:
   api:
@@ -32,14 +32,14 @@ functions:
 
 resources:
   Resources:
-    UsersTable:
+    CasbinTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: userId
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: userId
+          - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:custom.tableName}
+        TableName: ${self:custom.casbinTableName}
