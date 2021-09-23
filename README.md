@@ -72,7 +72,7 @@ The implementation is `rbac_with_resource_roles`
 
 The model is defined in a [static file](casbin-config/rbac_with_resource_roles_model.conf).
 
-Policies are currently loaded via the `/seed` endpoint. See [rbac_with_resource_roles_policies.conf](casbin-config/rbac_with_resource_roles_policies.conf) for the definition of the policies used in the code.
+Policies are currently loaded via the `/seed` endpoint. See [rbac_with_resource_roles_policy.csv](casbin-config/rbac_with_resource_roles_policy.csv) for the definition of the policies used in the code.
 
 | Route                     | HTTP Method | Description                                          |
 | ------------------------- | ----------- | ---------------------------------------------------- |
