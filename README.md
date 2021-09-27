@@ -20,7 +20,7 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
 
 Many applications end up reinventing wheels by building tightly coupled permissions that rot and become difficult to change. The aims of this poc are:
 
-- Evaluate whether a serverless microservice api can be used to serve multiple backend API and FE UI systems.
+- Evaluate whether a serverless microservice api can be used to serve multiple client systems (backend API and FE UI).
 - Re-use of the [Casbin](https://casbin.org/) engine.
 - Later: Adding a react page to manage the permissions.
 
@@ -100,16 +100,18 @@ Which will respond with:
 
 ## Up Next / TODO
 
-- [x] Move [casbin model](casbin-config/rbac_with_resource_roles_model.conf) into DynamoDB (Models shouldn't be in a public repo!)
-- [x] Convert the api to use Casbin with dynamodb. See [here](https://www.nearform.com/blog/access-control-node-js-fastify-and-casbin/) for ideas.
+- [ ] Define a more realistic scenario of
+  - [ ] [groups and users](https://www.mockaroo.com/552a1eb0).
+  - [ ] Realistic operations for the groups
+  - [ ] Load test
+  - [ ] Specify DynamoDB `ProvisionedThroughput` as defined in the [Python Driver](https://github.com/abqadeer/python-dycasbin/blob/master/python_dycasbin/adapter.py)
 - [ ] Define a clean api
   - [ ] Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
   - [ ] Maybe add Swagger / openAPI
-- [x] Remove the template API
-- [ ] Define a more realistic scenario of groups and users.
-  - [ ] Load test
 - [ ] React (Next.js?) management front page
   - [ ] Use the mutating sections of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
   - [ ] Consider Next.js for the complete implementation?
-- [ ] Specify DynamoDB `ProvisionedThroughput` as defined in the [Python Driver](https://github.com/abqadeer/python-dycasbin/blob/master/python_dycasbin/adapter.py) 
-- [ ] Configure local dynamodb in docker.
+- [ ] Configure local dynamodb in docker for faster (local) development.
+- [x] Move [casbin model](casbin-config/rbac_with_resource_roles_model.conf) into DynamoDB (Models shouldn't be in a public repo!)
+- [x] Convert the api to use Casbin with dynamodb. See [here](https://www.nearform.com/blog/access-control-node-js-fastify-and-casbin/) for ideas.
+- [x] Remove the template API
