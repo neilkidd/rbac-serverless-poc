@@ -15,6 +15,10 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
     - [Deploy](#deploy)
   - [Invocation](#invocation)
     - [Endpoints](#endpoints)
+    - [Group or user level enforcement](#group-or-user-level-enforcement)
+- [Discussion](#discussion)
+  - [Why node and express?](#why-node-and-express)
+  - [Why DynamoDB?](#why-dynamodb)
 - [References](#references)
 - [Up Next / TODO](#up-next--todo)
 
@@ -34,7 +38,8 @@ The set of [users & groups policies](casbin-config/rbac_resource_roles_policy.js
 
 Each of the 4 groups "owns" 2 `obj`ects that can be `act`ed on. Each `obj`ect can be `act`ioned following the CRUD model. (`create`, `read`, `update`, `delete`).
 
-100 users were randomly generated and assigned to a group.
+100 users were randomly generated and assigned to a group.  
+To validate that users can be assigned to multiple groups, the user, `donella.bilbrey@legalandfinance.com` belongs to both the `legal` and `finance` groups.
 
 - sales, 26 users.
   - monthly_sales_report
@@ -71,7 +76,7 @@ npm install
 If not already configured. _Note:_ [The leading space is intentional](https://stackoverflow.com/questions/6475524/do-i-prevent-commands-from-showing-up-in-bash-history)
 
 ```bash
- export AWS_ACCESS_KEY_ID=<your-key-here> && export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
+ export AWS_ACCESS_KEY_ID=<your-key-here> && export AWS_SECRET_ACCESS_KEY=<your-secret-key-here> && export AWS_DEFAULT_REGION=eu-west-2
 ```
 
 #### Deploy
@@ -82,7 +87,7 @@ serverless deploy
 
 ### Invocation
 
-After successful deployment, the output will contain an endpoint. Take note of this and replace `<your-endpoint-here>` in subsequent commands.
+After successful deployment, the serverless output will contain an endpoint. Take note of this and replace `<your-endpoint-here>` in subsequent commands.
 
 ```bash
 ...
@@ -93,15 +98,13 @@ endpoints:
 
 #### Endpoints
 
-The implementation is `rbac_with_resource_roles`
+The implementation is `rbac_with_resource_roles` with the model defined in a [static file](casbin-config/rbac_with_resource_roles_model.conf). The role `g2` is currently unused.
 
-The model is defined in a [static file](casbin-config/rbac_with_resource_roles_model.conf).
-
-Policies are currently loaded via the `/seed` endpoint. See [rbac_with_resource_roles_policy.csv](casbin-config/rbac_with_resource_roles_policy.csv) for the definition of the policies used in the code.
+Policies are loaded via the `/seed` endpoint. See [rbac_with_resource_roles_policy.csv](casbin-config/rbac_with_resource_roles_policy.csv) for the definition of the policies used in the code.
 
 | Route                     | HTTP Method | Description                                          |
 | ------------------------- | ----------- | ---------------------------------------------------- |
-| `/clear`                   | GET         | A convenience method to remove all policies from the DB.                  |
+| `/clear`                   | GET         | Development convenience method to remove all policies from the DB.                  |
 | `/seed`                   | GET         | Seeds the [sample](casbin-config/rbac_resource_roles_policy.json) policies into dynamoDB                  |
 | `/enforce/:sub/:obj/:act` | GET         | Tests a subject, object, action against the seeded policies |
 
@@ -117,6 +120,29 @@ Which will respond with:
 {"sub":"angus.muldoon@development.com","obj":"release_to_staging","act":"create","result":true}
 ```
 
+#### Group or user level enforcement
+
+The `/enforce/:sub/:obj/:act` endpoint can be queried with a `:sub` of a user or group. EG:
+
+- `curl <your-endpoint-here>/enforce/angus.muldoon@development.com/release_to_staging/create`
+- `curl <your-endpoint-here>/enforce/development/release_to_staging/create`
+
+## Discussion
+
+### Why node and express?
+
+Casbin is implemented in a number of languages. Go appears to be the best supported and "native" language. node.js was selected as it is widely supported with plugins, easily understood and [cold startup times](https://mikhail.io/serverless/coldstarts/aws/) in lambda are fast.
+
+The aim is to be a Casbin "wrapper", therefore little custom code is needed.
+
+### Why DynamoDB?
+
+DynamoDB is serverless and fully managed. The maintenance overhead is low.
+
+Typically permissions are a read heavy workload. If performance becomes an issue then [DAX](https://aws.amazon.com/dynamodb/dax/) should be evaluated.
+
+Alternatively Casbin has support for a wide range of [backend storage adaptors](https://casbin.org/docs/en/adapters) so the implementation can easily be changed depending on throughput requirements.
+
 ## References
 
 - [Serverless Framework Node Express API on AWS template](https://github.com/serverless/examples/tree/master/aws-node-express-dynamodb-api)
@@ -130,7 +156,6 @@ Which will respond with:
   - [x] [groups and users](https://www.mockaroo.com/552a1eb0).
   - [x] Realistic operations for the groups
   - [ ] Load test
-  - [ ] Specify DynamoDB `ProvisionedThroughput` as defined in the [Python Driver](https://github.com/abqadeer/python-dycasbin/blob/master/python_dycasbin/adapter.py)
 - [ ] Define a clean api
   - [ ] Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
   - [ ] Maybe add Swagger / openAPI

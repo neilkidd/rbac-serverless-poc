@@ -32,6 +32,8 @@
   {"policy_type":"p","sub":"legal","obj":"employment_contract","act":"update"},
   {"policy_type":"p","sub":"legal","obj":"employment_contract","act":"delete"},
 
+  {"policy_type":"g","group":"legal","user":"donella.bilbrey@legalandfinance.com"},
+  {"policy_type":"g","group":"finance","user":"donella.bilbrey@legalandfinance.com"},
   {"policy_type":"g","group":"development","user":"angus.muldoon@development.com"},
   {"policy_type":"g","group":"development","user":"lianne.kubiak@development.com"},
   {"policy_type":"g","group":"development","user":"mar.fitzgilbert@development.com"},
@@ -89,8 +91,6 @@
   {"policy_type":"g","group":"finance","user":"oby.grenshiels@finance.com"},
   {"policy_type":"g","group":"finance","user":"danya.skewes@finance.com"},
   {"policy_type":"g","group":"finance","user":"jacky.juanico@finance.com"},
-  {"policy_type":"g","group":"finance","user":"schuyler.amorine@finance.com"},
-  {"policy_type":"g","group":"legal","user":"donella.bilbrey@legal.com"},
   {"policy_type":"g","group":"legal","user":"rickert.harper@legal.com"},
   {"policy_type":"g","group":"legal","user":"crin.geall@legal.com"},
   {"policy_type":"g","group":"legal","user":"willie.balfour@legal.com"},
