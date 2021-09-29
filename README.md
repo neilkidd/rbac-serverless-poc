@@ -34,16 +34,18 @@ The set of [users & groups policies](casbin-config/rbac_resource_roles_policy.js
 
 Each of the 4 groups "owns" 2 `obj`ects that can be `act`ed on. Each `obj`ect can be `act`ioned following the CRUD model. (`create`, `read`, `update`, `delete`).
 
-- sales
+100 users were randomly generated and assigned to a group.
+
+- sales, 26 users.
   - monthly_sales_report
   - annual_sales_report
-- development
+- development, 28 users.
   - release_to_staging
   - release_to_production
-- finance
+- finance, 30 users.
   - monthly_accounts
   - annual_accounts
-- legal
+- legal, 16 users.
   - sales_contract
   - employment_contract
 
