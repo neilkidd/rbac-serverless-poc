@@ -76,7 +76,7 @@ npm install
 If not already configured. _Note:_ [The leading space is intentional](https://stackoverflow.com/questions/6475524/do-i-prevent-commands-from-showing-up-in-bash-history)
 
 ```bash
- export AWS_ACCESS_KEY_ID=<your-key-here> && export AWS_SECRET_ACCESS_KEY=<your-secret-key-here> && export AWS_DEFAULT_REGION=eu-west-2
+ export AWS_ACCESS_KEY_ID=<your-key-here> && export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
 ```
 
 #### Deploy
@@ -106,9 +106,11 @@ Policies are loaded via the `/seed` endpoint. See [rbac_with_resource_roles_poli
 | ------------------------- | ----------- | ---------------------------------------------------- |
 | `/clear`                   | GET         | Development convenience method to remove all policies from the DB.                  |
 | `/seed`                   | GET         | Development convenience method to load the [sample](casbin-config/rbac_resource_roles_policy.json) policies into dynamoDB                  |
-| `/enforce/:sub/:obj/:act` | GET         | Tests a subject, object, action against the seeded policies |
-| `/rolesfor/:sub` | GET         | Returns the roles defined for a subject. Wraps Casbin's `getRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com` |
-| `/implicitrolesfor/:sub` | GET         | Returns the roles defined for a subject. Wraps Casbin's `getImplicitRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com` |
+| `/enforce/:sub/:obj/:act` | GET         | Tests a subject, object, action against the seeded policies. _Hint_ `:sub` can be a user OR group. |
+| `/rolesfor/:sub` | GET         | Returns the roles defined for a subject. Wraps Casbin's RBAC `getRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com` |
+| `/implicitrolesfor/:sub` | GET         | Returns the roles defined for a subject. Wraps Casbin's RBAC `getImplicitRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com` |
+| `/permissionsfor/:sub` | GET         | Returns the permissions defined for a subject. Wraps Casbin's `getPermissionsForUser` _Hint_: This method requires a group to be passed for results as users perms are via groups.|
+| `/implicitpermissionsfor/:sub` | GET         | Returns the permissions defined for a subject. Wraps Casbin's `getImplicitPermissionsForUser` _Note_: Potentially useful to proxy (via an API) to a front end UI |
 
 Example call:
 
@@ -154,17 +156,6 @@ Alternatively Casbin has support for a wide range of [backend storage adaptors](
 
 ## Up Next / TODO
 
-- [ ] Define a more realistic scenario of
-  - [x] [groups and users](https://www.mockaroo.com/552a1eb0).
-  - [x] Realistic operations for the groups
-  - [ ] Load test
-- [ ] Define a clean api
-  - [ ] Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
-  - [ ] Maybe add Swagger / openAPI
-- [ ] React (Next.js?) management front page
-  - [ ] Use the mutating sections of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
-  - [ ] Consider Next.js for the complete implementation?
-- [ ] Configure local dynamodb in docker for faster (local) development.
-- [x] Move [casbin model](casbin-config/rbac_with_resource_roles_model.conf) into DynamoDB (Models shouldn't be in a public repo!)
-- [x] Convert the api to use Casbin with dynamodb. See [here](https://www.nearform.com/blog/access-control-node-js-fastify-and-casbin/) for ideas.
-- [x] Remove the template API
+- [ ] Load test
+- [ ] Refactor Casbin code into it's own module. (Removes duplication.)
+- [ ] Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
