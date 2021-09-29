@@ -5,6 +5,8 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
 ## Table of Contents  <!-- omit in toc -->
 
 - [Goals](#goals)
+- [Scenario](#scenario)
+  - [Groups](#groups)
 - [Getting Started](#getting-started)
   - [Software Used](#software-used)
   - [Deployment](#deployment)
@@ -23,6 +25,27 @@ Many applications end up reinventing wheels by building tightly coupled permissi
 - Evaluate whether a serverless microservice api can be used to serve multiple client systems (backend API and FE UI).
 - Re-use of the [Casbin](https://casbin.org/) engine.
 - Later: Adding a react page to manage the permissions.
+
+## Scenario
+
+The set of [users & groups policies](casbin-config/rbac_resource_roles_policy.json) is intended to provide a reasonably sane model with realistic volume of data.
+
+### Groups
+
+Each of the 4 groups "owns" 2 `obj`ects that can be `act`ed on. Each `obj`ect can be `act`ioned following the CRUD model. (`create`, `read`, `update`, `delete`).
+
+- sales
+  - monthly_sales_report
+  - annual_sales_report
+- development
+  - release_to_staging
+  - release_to_production
+- finance
+  - monthly_accounts
+  - annual_accounts
+- legal
+  - sales_contract
+  - employment_contract
 
 ## Getting Started
 
