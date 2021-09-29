@@ -105,8 +105,10 @@ Policies are loaded via the `/seed` endpoint. See [rbac_with_resource_roles_poli
 | Route                     | HTTP Method | Description                                          |
 | ------------------------- | ----------- | ---------------------------------------------------- |
 | `/clear`                   | GET         | Development convenience method to remove all policies from the DB.                  |
-| `/seed`                   | GET         | Seeds the [sample](casbin-config/rbac_resource_roles_policy.json) policies into dynamoDB                  |
+| `/seed`                   | GET         | Development convenience method to load the [sample](casbin-config/rbac_resource_roles_policy.json) policies into dynamoDB                  |
 | `/enforce/:sub/:obj/:act` | GET         | Tests a subject, object, action against the seeded policies |
+| `/rolesfor/:sub` | GET         | Returns the roles defined for a subject. Wraps Casbin's `getRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com` |
+| `/implicitrolesfor/:sub` | GET         | Returns the roles defined for a subject. Wraps Casbin's `getImplicitRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com` |
 
 Example call:
 

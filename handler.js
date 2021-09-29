@@ -96,6 +96,51 @@ app.get("/enforce/:sub/:obj/:act", async function (req, res) {
   }
 });
 
+app.get("/rolesfor/:sub", async function (req, res) {
+
+  const sub = req.params.sub;
+
+  try {
+    const enforcer = await Casbin.newEnforcer('casbin-config/rbac_with_resource_roles_model.conf', cdbAdaptor);
+
+    // Load policies from the database.
+    await enforcer.loadPolicy();
+
+    // Check permissions.
+    const result = await enforcer.getRolesForUser(sub);
+    console.log(result);
+
+    res.json({ sub, result });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Could not retrieve roles for user" });
+  }
+});
+
+app.get("/implicitrolesfor/:sub", async function (req, res) {
+
+  const sub = req.params.sub;
+
+  try {
+    const enforcer = await Casbin.newEnforcer('casbin-config/rbac_with_resource_roles_model.conf', cdbAdaptor);
+
+    // Load policies from the database.
+    await enforcer.loadPolicy();
+
+    // Check permissions.
+    const result = await enforcer.getImplicitRolesForUser(sub);
+    console.log(result);
+
+    res.json({ sub, result });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Could not retrieve implicit roles for user" });
+  }
+});
+
+
 app.use((req, res, next) => {
   return res.status(404).json({
     error: "Not Found",
