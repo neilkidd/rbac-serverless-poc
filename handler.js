@@ -11,6 +11,7 @@ const casbinTableOpts = {
   hashKey: 'id'
 };
 const cdbAdaptor = new CasbinDynamoDBAdapter(dynamoDbClient, casbinTableOpts);
+const allPolicies = require('casbin-config/rbac_resource_roles_policy.json');
 
 const app = express();
 app.use(express.json());
@@ -18,18 +19,18 @@ app.use(express.json());
 app.get("/seed", async function (req, res) {
 
   try {
-    const dbenforcer = await Casbin.newEnforcer('casbin-config/rbac_with_resource_roles_model.conf', cdbAdaptor);
+    const enforcer = await Casbin.newEnforcer('casbin-config/rbac_with_resource_roles_model.conf', cdbAdaptor);
 
     // Load policies from the database.
-    await dbenforcer.loadPolicy();
+    await enforcer.loadPolicy();
 
-    await dbenforcer.addPolicy('alice', 'data1', 'read');
-    await dbenforcer.addPolicy('bob', 'data2', 'write');
-    await dbenforcer.addPolicy('data_group_admin', 'data_group', 'write');
-
-    await dbenforcer.addNamedGroupingPolicy('g', 'alice', 'data_group_admin');
-    await dbenforcer.addNamedGroupingPolicy('g2', 'data1', 'data_group');
-    await dbenforcer.addNamedGroupingPolicy('g2', 'data2', 'data_group');
+    allPolicies.forEach(async function (policy, index) {
+      if (policy.policy_type === "p") {
+        await enforcer.addPolicy(policy.sub, policy.obj, policy.act);
+      } else if (policy.policy_type === "g") {
+        await enforcer.addGroupingPolicy(policy.user, policy.group);
+      }
+    });
 
     res.json({ "seeded": true });
 
@@ -39,6 +40,38 @@ app.get("/seed", async function (req, res) {
   }
 });
 
+app.get("/clear", async function (req, res) {
+
+  /**
+   * A sufficient, but terrible!, way to Truncate a dynamoDB table
+   * The test data set only has a couple of hundred items.
+   */
+  try {
+
+    const rows = await dynamoDbClient.scan({
+      TableName: casbinTableOpts.tableName,
+      ProjectionExpression: "id"
+    }).promise();
+
+    const logLine = `Deleting ${rows.Items.length} records`;
+    console.log(logLine);
+
+    rows.Items.forEach(async function (element, i) {
+      await dynamoDbClient.delete({
+        TableName: casbinTableOpts.tableName,
+        Key: element,
+      }).promise();
+    });
+
+    res.json({ "cleared": logLine });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Could not clear database." });
+  }
+});
+
+
 app.get("/enforce/:sub/:obj/:act", async function (req, res) {
 
   const sub = req.params.sub;
@@ -46,13 +79,13 @@ app.get("/enforce/:sub/:obj/:act", async function (req, res) {
   const act = req.params.act;
 
   try {
-    const dbenforcer = await Casbin.newEnforcer('casbin-config/rbac_with_resource_roles_model.conf', cdbAdaptor);
+    const enforcer = await Casbin.newEnforcer('casbin-config/rbac_with_resource_roles_model.conf', cdbAdaptor);
 
     // Load policies from the database.
-    await dbenforcer.loadPolicy();
+    await enforcer.loadPolicy();
 
     // Check permissions.
-    const result = await dbenforcer.enforce(sub, obj, act);
+    const result = await enforcer.enforce(sub, obj, act);
     console.log(result);
 
     res.json({ sub, obj, act, result });

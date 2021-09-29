@@ -76,19 +76,20 @@ Policies are currently loaded via the `/seed` endpoint. See [rbac_with_resource_
 
 | Route                     | HTTP Method | Description                                          |
 | ------------------------- | ----------- | ---------------------------------------------------- |
-| `/seed`                   | GET         | Seeds sample policies into dynamoDB                  |
-| `/enforce/:sub/:obj/:act` | GET         | Tests a subject, object, action against the policies |
+| `/clear`                   | GET         | A convenience method to remove all policies from the DB.                  |
+| `/seed`                   | GET         | Seeds the [sample](casbin-config/rbac_resource_roles_policy.json) policies into dynamoDB                  |
+| `/enforce/:sub/:obj/:act` | GET         | Tests a subject, object, action against the seeded policies |
 
 Example call:
 
 ```bash
-curl <your-endpoint-here>/enforce/alice/data1/read
+curl <your-endpoint-here>/enforce/angus.muldoon@development.com/release_to_staging/create
 ```
 
 Which will respond with:
 
 ```json
-{"sub":"alice","obj":"data1","act":"read","result":true}
+{"sub":"angus.muldoon@development.com","obj":"release_to_staging","act":"create","result":true}
 ```
 
 ## References
@@ -101,8 +102,8 @@ Which will respond with:
 ## Up Next / TODO
 
 - [ ] Define a more realistic scenario of
-  - [ ] [groups and users](https://www.mockaroo.com/552a1eb0).
-  - [ ] Realistic operations for the groups
+  - [x] [groups and users](https://www.mockaroo.com/552a1eb0).
+  - [x] Realistic operations for the groups
   - [ ] Load test
   - [ ] Specify DynamoDB `ProvisionedThroughput` as defined in the [Python Driver](https://github.com/abqadeer/python-dycasbin/blob/master/python_dycasbin/adapter.py)
 - [ ] Define a clean api
