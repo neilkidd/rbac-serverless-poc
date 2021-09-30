@@ -100,7 +100,7 @@ endpoints:
 
 The implementation is `rbac_with_resource_roles` with the model defined in a [static file](casbin-config/rbac_with_resource_roles_model.conf). The role `g2` is currently unused.
 
-Policies are loaded via the `/seed` endpoint. See [rbac_with_resource_roles_policy.csv](casbin-config/rbac_with_resource_roles_policy.csv) for the definition of the policies used in the code.
+Policies are loaded via the `/seed` endpoint. See [rbac_resource_roles_policy.json](casbin-casbin-config/rbac_resource_roles_policy.json) for the definition of the policies used in the code.
 
 | Route                     | HTTP Method | Description                                          |
 | ------------------------- | ----------- | ---------------------------------------------------- |
