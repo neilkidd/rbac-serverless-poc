@@ -157,5 +157,5 @@ Alternatively Casbin has support for a wide range of [backend storage adaptors](
 ## Up Next / TODO
 
 - [ ] Load test
-- [ ] Refactor Casbin code into it's own module. (Removes duplication.)
-- [ ] Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
+- [x] Refactor Casbin code into it's own module. (Removes duplication.)
+- [ ] (Started) Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
