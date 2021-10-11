@@ -68,10 +68,10 @@ You will need an AWS account with [access keys configured](https://www.serverles
 
 ### Local development
 
-Using [docker-compose](docker-compose.yml) and `npm` local dev provides:
+Using [docker-compose](docker-compose.yml) and `npm`, local dev provides:
 
 - A [local DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html) instance.
-- A local [DynamoDB admin GUI](https://github.com/aaronshaf/dynamodb-admin).
+- A local [DynamoDB admin GUI](https://github.com/aaronshaf/dynamodb-admin) at [localhost:8001](http://localhost:8001).
 - The api running on port 3000
 
 #### Steps  <!-- omit in toc -->
