@@ -1,20 +1,23 @@
-const AWS2 = require('aws-sdk');
-const casbin = require('casbin');
-const CasbinDynamoDBAdapter = require('casbin-dynamodb-adapter');
+const AWS = require("aws-sdk");
+const casbin = require("casbin");
+const CasbinDynamoDBAdapter = require("casbin-dynamodb-adapter");
 
-const dynamoDbClient = new AWS2.DynamoDB.DocumentClient();
+const defaultPolicies = require("./casbin-config/rbac_resource_roles_policy.json");
+const config = require("./config");
 
-const CASBIN_TABLE = process.env.CASBIN_TABLE;
+AWS.config.update(config.aws);
+
+const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
+
 const casbinTableOpts = {
-  tableName: CASBIN_TABLE,
-  hashKey: 'id'
+  tableName: config.casbin.tableName,
+  hashKey: "id",
 };
 
-const defaultPolicies = require('casbin-config/rbac_resource_roles_policy.json');
-
 const enforcer = casbin.newEnforcer(
-  'casbin-config/rbac_with_resource_roles_model.conf',
-  new CasbinDynamoDBAdapter(dynamoDbClient, casbinTableOpts));
+  "casbin-config/rbac_with_resource_roles_model.conf",
+  new CasbinDynamoDBAdapter(dynamoDbClient, casbinTableOpts)
+);
 
 async function enforce(sub, obj, act) {
   const e = await enforcer;
@@ -63,18 +66,22 @@ async function clearTableData() {
    * A sufficient, but terrible!, way to Truncate a dynamoDB table
    * The test data set only has a couple of hundred items.
    */
-  const rows = await dynamoDbClient.scan({
-    TableName: casbinTableOpts.tableName,
-    ProjectionExpression: "id"
-  }).promise();
+  const rows = await dynamoDbClient
+    .scan({
+      TableName: casbinTableOpts.tableName,
+      ProjectionExpression: "id",
+    })
+    .promise();
 
   console.log(`clearTableData() : Deleting ${rows.Items.length} records`);
 
   rows.Items.forEach(async function (element, i) {
-    await dynamoDbClient.delete({
-      TableName: casbinTableOpts.tableName,
-      Key: element,
-    }).promise();
+    await dynamoDbClient
+      .delete({
+        TableName: casbinTableOpts.tableName,
+        Key: element,
+      })
+      .promise();
   });
 }
 

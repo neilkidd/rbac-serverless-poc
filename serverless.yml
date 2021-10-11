@@ -1,13 +1,13 @@
 service: rbac-serverless-poc
-frameworkVersion: '2'
+frameworkVersion: "2"
 
 custom:
-  casbinTableName: 'casbin-table-${sls:stage}'
+  casbinTableName: "casbin-table-${sls:stage}"
 
 provider:
   name: aws
   runtime: nodejs14.x
-  lambdaHashingVersion: '20201221'
+  lambdaHashingVersion: "20201221"
   iam:
     role:
       statements:
@@ -20,7 +20,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [ CasbinTable, Arn ]
+            - Fn::GetAtt: [CasbinTable, Arn]
   environment:
     CASBIN_TABLE: ${self:custom.casbinTableName}
 
@@ -28,7 +28,7 @@ functions:
   api:
     handler: handler.handler
     events:
-      - httpApi: '*'
+      - httpApi: "*"
 
 resources:
   Resources:
@@ -43,3 +43,6 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.casbinTableName}
+
+plugins:
+  - serverless-offline

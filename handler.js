@@ -1,6 +1,8 @@
-const rbac = require('./rbac');
-const express = require('express');
-const serverless = require('serverless-http');
+require("dotenv").config();
+const express = require("express");
+const serverless = require("serverless-http");
+
+const rbac = require("./rbac");
 
 const app = express();
 app.use(express.json());
@@ -42,7 +44,9 @@ app.get("/implicitrolesfor/:sub", async function (req, res) {
     res.json({ sub, result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Could not retrieve implicit roles for user" });
+    res
+      .status(500)
+      .json({ error: "Could not retrieve implicit roles for user" });
   }
 });
 
@@ -55,7 +59,9 @@ app.get("/implicitpermissionsfor/:sub", async function (req, res) {
     res.json({ sub, result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Could not retrieve implicit permissions for user" });
+    res
+      .status(500)
+      .json({ error: "Could not retrieve implicit permissions for user" });
   }
 });
 
@@ -73,11 +79,10 @@ app.get("/permissionsfor/:sub", async function (req, res) {
 });
 
 app.get("/seed", async function (req, res) {
-
   try {
     const result = await rbac.seed();
 
-    res.json({ "seededPolicies": result });
+    res.json({ seededPolicies: result });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Could not seed policies" });

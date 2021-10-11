@@ -2,15 +2,17 @@
 
 Role Based Access Control proof of concept / experiment, based on [Casbin](https://casbin.org/), AWS [Lambda](https://aws.amazon.com/lambda/) and [DynamoDB](https://aws.amazon.com/dynamodb/)
 
-## Table of Contents  <!-- omit in toc -->
+## Table of Contents <!-- omit in toc -->
 
 - [Goals](#goals)
 - [Scenario](#scenario)
   - [Groups](#groups)
 - [Getting Started](#getting-started)
   - [Software Used](#software-used)
+  - [Local development](#local-development)
   - [Deployment](#deployment)
     - [Install Dependencies](#install-dependencies)
+    - [Start the app](#start-the-app)
     - [Export AWS Credentials (Optional)](#export-aws-credentials-optional)
     - [Deploy](#deploy)
   - [Invocation](#invocation)
@@ -62,6 +64,35 @@ You will need an AWS account with [access keys configured](https://www.serverles
 
 - [Node.js](https://nodejs.org/en/), `14.17.6` (LTS)
 - [Servlerless framework](https://www.serverless.com/), `2.59.0`
+- [Docker](https://www.docker.com/)
+
+### Local development
+
+1.  Clone this repo
+
+2.  Copy `.env.sample` to `.env` and complete
+
+3.  Install the dependencies
+
+        npm install
+
+4.  Start the app
+
+        npm run dev
+
+5.  **First time** – create the Casbin table in your local DynamoDB instance
+
+    - Visit http://localhost:8001/
+    - Create a table with the following config (leave the other fields with their default values):
+    - | Field               | Value              |
+      | ------------------- | ------------------ |
+      | Table Name          | `casbin-table-dev` |
+      | Hash Attribute Name | `id`               |
+      | Hash Attribute Type | `String`           |
+
+6.  **First time** – seed the initial Casbin data into the database by visiting:
+
+        http://localhost:3000/seed
 
 ### Deployment
 
@@ -69,6 +100,12 @@ You will need an AWS account with [access keys configured](https://www.serverles
 
 ```bash
 npm install
+```
+
+#### Start the app
+
+```bash
+npm run dev
 ```
 
 #### Export AWS Credentials (Optional)
@@ -102,14 +139,14 @@ The implementation is `rbac_with_resource_roles` with the model defined in a [st
 
 Policies are loaded via the `/seed` endpoint. See [rbac_resource_roles_policy.json](casbin-config/rbac_resource_roles_policy.json) for the definition of the policies used in the code.
 
-| Route                     | HTTP Method | Description                                          |
-| ------------------------- | ----------- | ---------------------------------------------------- |
-| `/seed`                   | GET         | Development convenience method to load the [sample](casbin-config/rbac_resource_roles_policy.json) policies into dynamoDB. Clears the data and reloads.|
-| `/enforce/:sub/:obj/:act` | GET         | Tests a subject, object, action against the seeded policies. _Hint_ `:sub` can be a user OR group. |
-| `/rolesfor/:sub` | GET         | Returns the roles defined for a subject. Wraps Casbin's RBAC `getRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com` |
-| `/implicitrolesfor/:sub` | GET         | Returns the roles defined for a subject. Wraps Casbin's RBAC `getImplicitRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com` |
-| `/permissionsfor/:sub` | GET         | Returns the permissions defined for a subject. Wraps Casbin's `getPermissionsForUser` _Hint_: This method requires a group to be passed for results as users perms are via groups.|
-| `/implicitpermissionsfor/:sub` | GET         | Returns the permissions defined for a subject. Wraps Casbin's `getImplicitPermissionsForUser` _Note_: Potentially useful to proxy (via an API) to a front end UI |
+| Route                          | HTTP Method | Description                                                                                                                                                                        |
+| ------------------------------ | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/seed`                        | GET         | Development convenience method to load the [sample](casbin-config/rbac_resource_roles_policy.json) policies into dynamoDB. Clears the data and reloads.                            |
+| `/enforce/:sub/:obj/:act`      | GET         | Tests a subject, object, action against the seeded policies. _Hint_ `:sub` can be a user OR group.                                                                                 |
+| `/rolesfor/:sub`               | GET         | Returns the roles defined for a subject. Wraps Casbin's RBAC `getRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com`                                                   |
+| `/implicitrolesfor/:sub`       | GET         | Returns the roles defined for a subject. Wraps Casbin's RBAC `getImplicitRolesForUser` _Hint_: try `donella.bilbrey@legalandfinance.com`                                           |
+| `/permissionsfor/:sub`         | GET         | Returns the permissions defined for a subject. Wraps Casbin's `getPermissionsForUser` _Hint_: This method requires a group to be passed for results as users perms are via groups. |
+| `/implicitpermissionsfor/:sub` | GET         | Returns the permissions defined for a subject. Wraps Casbin's `getImplicitPermissionsForUser` _Note_: Potentially useful to proxy (via an API) to a front end UI                   |
 
 Example call:
 
@@ -120,7 +157,12 @@ curl <your-endpoint-here>/enforce/angus.muldoon@development.com/release_to_stagi
 Which will respond with:
 
 ```json
-{"sub":"angus.muldoon@development.com","obj":"release_to_staging","act":"create","result":true}
+{
+  "sub": "angus.muldoon@development.com",
+  "obj": "release_to_staging",
+  "act": "create",
+  "result": true
+}
 ```
 
 #### Group or user level enforcement
