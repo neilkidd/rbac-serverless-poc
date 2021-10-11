@@ -1,7 +1,34 @@
-version: "3"
+version: "3.8"
 
 services:
   dynamodb-local:
+    container_name: app-dynamodb-local
+    command: "-jar DynamoDBLocal.jar -sharedDb -inMemory"
     image: amazon/dynamodb-local
     ports:
       - "8000:8000"
+
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin
+    ports:
+      - "8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://host.docker.internal:8000
+    depends_on:
+      - dynamodb-local
+
+  awscli-dynamodb-migrator:
+    image: amazon/aws-cli
+    command: |
+      dynamodb create-table
+      --table-name casbin-table-dev
+      --attribute-definitions AttributeName=id,AttributeType=S
+      --key-schema AttributeName=id,KeyType=HASH
+      --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+      --endpoint-url http://host.docker.internal:8000
+    environment:
+      - AWS_ACCESS_KEY_ID=unused
+      - AWS_SECRET_ACCESS_KEY=unused
+      - AWS_DEFAULT_REGION=us-east-1
+    depends_on:
+      - dynamodb-local

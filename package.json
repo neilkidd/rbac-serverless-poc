@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "concurrently \"npm:start:api\" \"npm:dynamo:dev\" \"npm:dynamo:admin\"",
+    "dev_fork": "concurrently \"npm:dynamo:dev\" \"npm:start:api\"",
     "start:api": "serverless offline",
     "dynamo:dev": "docker-compose up",
     "dynamo:admin": "DYNAMO_ENDPOINT=http://localhost:8000 dynamodb-admin"
