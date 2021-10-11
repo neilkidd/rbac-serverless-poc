@@ -68,29 +68,27 @@ You will need an AWS account with [access keys configured](https://www.serverles
 
 ### Local development
 
-1.  Clone this repo
+Using [docker-compose](docker-compose.yml) and `npm` local dev provides:
 
-2.  Copy `.env.sample` to `.env` and complete
+- A [local DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html) instance.
+- A local [DynamoDB admin GUI](https://github.com/aaronshaf/dynamodb-admin).
+- The api running on port 3000
 
-3.  Install the dependencies
+#### Steps  <!-- omit in toc -->
+
+1. Clone this repo
+
+2. Copy `.env.sample` to `.env` and complete
+
+3. Install the dependencies
 
         npm install
 
-4.  Start the app
+4. Start the app
 
         npm run dev
 
-5.  **First time** – create the Casbin table in your local DynamoDB instance
-
-    - Visit http://localhost:8001/
-    - Create a table with the following config (leave the other fields with their default values):
-    - | Field               | Value              |
-      | ------------------- | ------------------ |
-      | Table Name          | `casbin-table-dev` |
-      | Hash Attribute Name | `id`               |
-      | Hash Attribute Type | `String`           |
-
-6.  **First time** – seed the initial Casbin data into the database by visiting:
+5. **First time** – seed the initial Casbin data into the database by visiting:
 
         http://localhost:3000/seed
 
