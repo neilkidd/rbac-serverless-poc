@@ -195,6 +195,6 @@ Alternatively Casbin has support for a wide range of [backend storage adaptors](
 
 ## Up Next / TODO
 
-- [ ] Load test
-- [x] Refactor Casbin code into it's own module. (Removes duplication.)
-- [ ] (Started) Wrap the readonly parts of the [casbin rbac api](https://casbin.org/docs/en/rbac-api)
+- [ ] Document [thunder-client](https://github.com/rangav/thunder-client-support) [calls and tests](thunder-tests/thunder-collection_permissions.json)
+- [ ] Define a clear api
+- [ ] Diagram
