@@ -9,15 +9,15 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
   - [Groups](#groups)
 - [Getting Started](#getting-started)
   - [Software Used](#software-used)
+  - [Configuration Steps](#configuration-steps)
   - [Local development](#local-development)
   - [Deployment](#deployment)
-    - [Install Dependencies](#install-dependencies)
-    - [Start the app](#start-the-app)
     - [Export AWS Credentials (Optional)](#export-aws-credentials-optional)
     - [Deploy](#deploy)
   - [Invocation](#invocation)
-    - [Endpoints](#endpoints)
-    - [Group or user level enforcement](#group-or-user-level-enforcement)
+    - [Thunder Client (VS Code Extension)](#thunder-client-vs-code-extension)
+  - [Endpoints](#endpoints)
+    - [Group OR user level enforcement](#group-or-user-level-enforcement)
 - [Discussion](#discussion)
   - [Why node and express?](#why-node-and-express)
   - [Why DynamoDB?](#why-dynamodb)
@@ -66,45 +66,31 @@ You will need an AWS account with [access keys configured](https://www.serverles
 - [Servlerless framework](https://www.serverless.com/), `2.59.0`
 - [Docker](https://www.docker.com/)
 
-### Local development
-
-Using [docker-compose](docker-compose.yml) and `npm`, local dev provides:
-
-- A [local DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html) instance.
-- A local [DynamoDB admin GUI](https://github.com/aaronshaf/dynamodb-admin) at [localhost:8001](http://localhost:8001).
-- The api running on port 3000
-
-#### Steps  <!-- omit in toc -->
+### Configuration Steps
 
 1. Clone this repo
 
 2. Copy `.env.sample` to `.env` and complete
 
-3. Install the dependencies
+3. Install dependencies
 
-        npm install
+    `npm install`
 
-4. Start the app
+### Local development
 
-        npm run dev
+`npm run dev`
 
-5. **First time** – seed the initial Casbin data into the database by visiting:
+This uses `serverless offline` and [docker-compose](docker-compose.yml) to provide:
 
-        http://localhost:3000/seed
+- The api running on [localhost:3000](localhost:3000)
+- A [DynamoDB admin GUI](https://github.com/aaronshaf/dynamodb-admin) at [localhost:8001](http://localhost:8001).
+- A [local DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html) instance with the table created.
+
+1. **First time** – seed the initial Casbin data into the database by visiting:
+
+    `http://localhost:3000/seed`
 
 ### Deployment
-
-#### Install Dependencies
-
-```bash
-npm install
-```
-
-#### Start the app
-
-```bash
-npm run dev
-```
 
 #### Export AWS Credentials (Optional)
 
@@ -116,9 +102,7 @@ If not already configured. _Note:_ [The leading space is intentional](https://st
 
 #### Deploy
 
-```bash
-serverless deploy
-```
+  `serverless deploy`
 
 ### Invocation
 
@@ -131,7 +115,17 @@ endpoints:
 ...
 ```
 
-#### Endpoints
+#### Thunder Client (VS Code Extension)
+
+A suite of example api calls, with simple tests, are provided using the [Thunder client](https://www.thunderclient.io/) VS Code plugin. The definitions are stored in the [thunder-tests](thunder-tests) directory.
+
+_Note:_ Configure the thunder client extension to ["Load From Project"](https://github.com/rangav/thunder-client-support#team-features). After enabling this setting, you may need to restart VS to load the collection.
+
+Api calls can be directed to local or remote endpoints by changing the `Env` => `vars` => `SERVER_ENDPOINT` value.
+
+_Tip:_ A useful sanity check is the using the "Run All" functionality of the permissions collection.
+
+### Endpoints
 
 The implementation is `rbac_with_resource_roles` with the model defined in a [static file](casbin-config/rbac_with_resource_roles_model.conf). The role `g2` is currently unused.
 
@@ -163,7 +157,7 @@ Which will respond with:
 }
 ```
 
-#### Group or user level enforcement
+#### Group OR user level enforcement
 
 The `/enforce/:sub/:obj/:act` endpoint can be queried with a `:sub` of a user or group. EG:
 
@@ -195,6 +189,5 @@ Alternatively Casbin has support for a wide range of [backend storage adaptors](
 
 ## Up Next / TODO
 
-- [ ] Document [thunder-client](https://github.com/rangav/thunder-client-support) [calls and tests](thunder-tests/thunder-collection_permissions.json)
-- [ ] Define a clear api
+- [ ] Define a restful api
 - [ ] Diagram
