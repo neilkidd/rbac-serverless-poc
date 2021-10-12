@@ -1,0 +1,129 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "permissions",
+  "dateExported": "2021-10-11T17:29:20.099Z",
+  "version": "1.1",
+  "folders": [],
+  "requests": [
+    {
+      "containerId": "",
+      "sortNum": 5000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "*/*"
+        },
+        {
+          "name": "User-Agent",
+          "value": "Thunder Client (https://www.thunderclient.io)"
+        }
+      ],
+      "colId": "d1dfbd72-ac5f-41a8-9438-364fbe60df4c",
+      "name": "Seed Data",
+      "url": "localhost:3000/seed",
+      "method": "GET",
+      "modified": "2021-10-11T17:20:30.960Z",
+      "created": "2021-10-11T17:18:36.816Z",
+      "_id": "3a17f109-34d7-4e50-9d42-2ad1362ac531",
+      "params": [],
+      "tests": [
+        {
+          "type": "json-query",
+          "custom": "json.seededPolicies",
+          "action": "equal",
+          "value": "132"
+        }
+      ]
+    },
+    {
+      "containerId": "",
+      "sortNum": 10000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "*/*"
+        },
+        {
+          "name": "User-Agent",
+          "value": "Thunder Client (https://www.thunderclient.io)"
+        }
+      ],
+      "colId": "d1dfbd72-ac5f-41a8-9438-364fbe60df4c",
+      "name": "User is permitted?",
+      "url": "localhost:3000/enforce/angus.muldoon@development.com/release_to_staging/create",
+      "method": "GET",
+      "modified": "2021-10-11T17:18:36.816Z",
+      "created": "2021-10-11T17:18:36.816Z",
+      "_id": "56c5efba-d291-46ed-866c-9672a8f186c7",
+      "params": [],
+      "tests": [
+        {
+          "type": "json-query",
+          "custom": "json.result",
+          "action": "equal",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "containerId": "",
+      "sortNum": 20000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "*/*"
+        },
+        {
+          "name": "User-Agent",
+          "value": "Thunder Client (https://www.thunderclient.io)"
+        }
+      ],
+      "colId": "d1dfbd72-ac5f-41a8-9438-364fbe60df4c",
+      "name": "Roles For User",
+      "url": "localhost:3000/implicitrolesfor/donella.bilbrey@legalandfinance.com",
+      "method": "GET",
+      "modified": "2021-10-11T17:27:03.767Z",
+      "created": "2021-10-11T17:21:48.066Z",
+      "_id": "ac92fcba-ea24-4443-ba9a-0f06b7916bac",
+      "params": [],
+      "tests": [
+        {
+          "type": "json-query",
+          "custom": "json.result[0]",
+          "action": "contains",
+          "value": "legal"
+        }
+      ]
+    },
+    {
+      "containerId": "",
+      "sortNum": 30000,
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "*/*"
+        },
+        {
+          "name": "User-Agent",
+          "value": "Thunder Client (https://www.thunderclient.io)"
+        }
+      ],
+      "colId": "d1dfbd72-ac5f-41a8-9438-364fbe60df4c",
+      "name": "Implicit Roles For User",
+      "url": "localhost:3000/rolesfor/donella.bilbrey@legalandfinance.com",
+      "method": "GET",
+      "modified": "2021-10-11T17:26:34.173Z",
+      "created": "2021-10-11T17:26:34.173Z",
+      "_id": "330d33ff-f480-4f17-bd34-95370fdbfbc6",
+      "params": [],
+      "tests": [
+        {
+          "type": "json-query",
+          "custom": "json.result[0]",
+          "action": "contains",
+          "value": "legal"
+        }
+      ]
+    }
+  ]
+}
