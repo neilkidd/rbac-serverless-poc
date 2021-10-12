@@ -13,6 +13,8 @@
 !include <awslib/Compute/Lambda>
 !include <awslib/Database/DynamoDB>
 
+title \nBasic Architecture\n
+
 left to right direction
 
 APIGateway(rbacAPIGW, "API GW", "")
@@ -21,4 +23,5 @@ DynamoDB(rbacDb, "Permissions DB", "RBAC group perms and users")
 
 rbacAPIGW--> rbacAPI
 rbacAPI --> rbacDb
+
 @enduml
