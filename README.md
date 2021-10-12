@@ -124,7 +124,7 @@ _Note:_ Configure the thunder client extension to ["Load From Project"](https://
 
 Api calls can be directed to local or remote endpoints by changing the `Env` => `vars` => `SERVER_ENDPOINT` value.
 
-_Tip:_ A useful sanity check is the using the "Run All" functionality of the permissions collection.
+_Tip:_ A useful sanity check is to use the "Run All" functionality of the permissions collection.
 
 ### Endpoints
 
