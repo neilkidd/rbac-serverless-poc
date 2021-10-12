@@ -63,8 +63,9 @@ You will need an AWS account with [access keys configured](https://www.serverles
 ### Software Used
 
 - [Node.js](https://nodejs.org/en/), `14.17.6` (LTS)
-- [Servlerless framework](https://www.serverless.com/), `2.59.0`
+- [Serverless framework](https://www.serverless.com/), `2.62.0`
 - [Docker](https://www.docker.com/)
+  - [Docker Compose](https://docs.docker.com/compose/install/) Optional - for local development.
 
 ### Configuration Steps
 

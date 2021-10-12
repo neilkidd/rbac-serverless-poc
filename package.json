@@ -1,7 +1,7 @@
 {
-  "name": "test",
-  "version": "1.0.0",
-  "description": "",
+  "name": "rbac-serverless-poc",
+  "version": "0.1.0",
+  "description": "https://github.com/neilkidd/rbac-serverless-poc",
   "scripts": {
     "dev": "concurrently \"npm:dynamo:dev\" \"npm:start:api\"",
     "start:api": "serverless offline",
@@ -14,7 +14,7 @@
     "concurrently": "^6.3.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "serverless": "^2.60.3",
+    "serverless": "^2.62.0",
     "serverless-http": "^2.7.0",
     "serverless-offline": "^8.2.0"
   }
