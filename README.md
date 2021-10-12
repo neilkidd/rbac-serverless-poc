@@ -32,6 +32,8 @@ Many applications end up reinventing wheels by building tightly coupled permissi
 - Re-use of the [Casbin](https://casbin.org/) engine.
 - Later: Adding a react page to manage the permissions.
 
+![Simple Architecture](docs/basic-architecture.svg)
+
 ## Scenario
 
 The set of [users & groups policies](casbin-config/rbac_resource_roles_policy.json) is intended to provide a reasonably sane model with realistic volume of data.

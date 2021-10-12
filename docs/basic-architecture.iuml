@@ -1,0 +1,24 @@
+@startuml
+'Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+'SPDX-License-Identifier: MIT (For details, see https://github.com/awslabs/aws-icons-for-plantuml/blob/master/LICENSE)
+
+!include <awslib/AWSCommon>
+
+' Uncomment the following line to create simplified view
+' !include <awslib/AWSSimplified>
+
+!include <awslib/General/Users>
+!include <awslib/Mobile/APIGateway>
+!include <awslib/SecurityIdentityAndCompliance/Cognito>
+!include <awslib/Compute/Lambda>
+!include <awslib/Database/DynamoDB>
+
+left to right direction
+
+APIGateway(rbacAPIGW, "API GW", "")
+Lambda(rbacAPI, "RBAC API", "Node & express.js")
+DynamoDB(rbacDb, "Permissions DB", "RBAC group perms and users")
+
+rbacAPIGW--> rbacAPI
+rbacAPI --> rbacDb
+@enduml
