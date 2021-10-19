@@ -22,7 +22,6 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
   - [Why node and express?](#why-node-and-express)
   - [Why DynamoDB?](#why-dynamodb)
 - [References](#references)
-- [Up Next / TODO](#up-next--todo)
 
 ## Goals
 
@@ -189,8 +188,4 @@ Alternatively Casbin has support for a wide range of [backend storage adaptors](
 - [casbin-dynamodb-adapter](https://github.com/fospitia/casbin-dynamodb-adapter)
 - [node-casbin](https://github.com/casbin/node-casbin)
 - [casbin example models & policies](https://github.com/casbin/casbin/tree/master/examples)
-
-## Up Next / TODO
-
-- [ ] Define a restful api
-- [ ] Diagram
+- [casbin RBAC api](https://casbin.org/docs/en/rbac-api)
