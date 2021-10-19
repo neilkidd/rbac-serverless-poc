@@ -21,6 +21,7 @@ Role Based Access Control proof of concept / experiment, based on [Casbin](https
 - [Discussion](#discussion)
   - [Why node and express?](#why-node-and-express)
   - [Why DynamoDB?](#why-dynamodb)
+  - [Lambda Cost Control and Performance](#lambda-cost-control-and-performance)
 - [References](#references)
 
 ## Goals
@@ -181,6 +182,12 @@ DynamoDB is serverless and fully managed. The maintenance overhead is low.
 Typically permissions are a read heavy workload. If performance becomes an issue then [DAX](https://aws.amazon.com/dynamodb/dax/) should be evaluated.
 
 Alternatively Casbin has support for a wide range of [backend storage adaptors](https://casbin.org/docs/en/adapters) so the implementation can easily be changed depending on throughput requirements.
+
+### Lambda Cost Control and Performance
+
+The lambda is currently configured to use the `x86_64` architecture.
+
+There is potential for significant cost savings, while increasing performance, by changing the architecture to `arm64`. More information can be found at the [AWS blog](https://aws.amazon.com/blogs/aws/aws-lambda-functions-powered-by-aws-graviton2-processor-run-your-functions-on-arm-and-get-up-to-34-better-price-performance/)
 
 ## References
 
