@@ -65,7 +65,7 @@ You will need an AWS account with [access keys configured](https://www.serverles
 ### Software Used
 
 - [Node LTS](https://nodejs.org/en/), See: [`.nvmrc`](.nvmrc)
-- [Serverless framework](https://www.serverless.com/), `2.62.0`
+- [Serverless framework](https://www.serverless.com/), See: [`package.json`](package.json)
 - [Docker](https://www.docker.com/)
   - [Docker Compose](https://docs.docker.com/compose/install/) Optional - for local development.
 
